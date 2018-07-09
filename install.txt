@@ -1,10 +1,11 @@
-install
-node.js
-mongoDB
-robomongo
+run database
+./mongod --dbpath ~/Documents/mongo-data
 
 npm init
 
 packages
-npm install mongodb --save
+npm i mongodb --save
+npm i mongoose --save
+npm i express --save
+npm i body-parser --save
 
