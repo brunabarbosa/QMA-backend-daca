@@ -1,0 +1,10 @@
+install
+node.js
+mongoDB
+robomongo
+
+npm init
+
+packages
+npm install mongodb --save
+

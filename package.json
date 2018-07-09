@@ -1,0 +1,22 @@
+{
+  "name": "qma-backend-daca",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunabarbosa/QMA-backend-daca.git"
+  },
+  "author": "bruna barbosa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brunabarbosa/QMA-backend-daca/issues"
+  },
+  "homepage": "https://github.com/brunabarbosa/QMA-backend-daca#readme",
+  "dependencies": {
+    "mongodb": "^3.1.1"
+  }
+}
