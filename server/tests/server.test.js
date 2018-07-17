@@ -30,6 +30,24 @@ describe('POST /aulaPresenciais', () => {
                     expect(aulas[0].disciplina).toEqual(disciplina);
                     done();
                 }).catch((e) => done(e));
-            })
+            });
+    });
+
+    it('should not create aulaPresencial w/ disciplina field empty', (done) => {
+        
+        request(app)
+            .post('/aulaPresenciais')
+            .send({})
+            .expect(400)
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+
+                AulaPresencial.find().then((aulas) => {
+                    expect(aulas.length).toBe(0);
+                    done();
+                }).catch((e) => done(e));
+            });
     });
 });
