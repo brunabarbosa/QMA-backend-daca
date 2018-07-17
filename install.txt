@@ -8,4 +8,8 @@ npm i mongodb --save
 npm i mongoose --save
 npm i express --save
 npm i body-parser --save
+npm i expect --save-dev
+npm i mocha --save-dev
+npm i nodemon --save-dev
+npm i supertest --save-dev
 
