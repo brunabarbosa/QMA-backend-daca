@@ -4,9 +4,16 @@ const request = require('supertest');
 const {app} = require('./../server');
 const {AulaPresencial} = require('./../models/aulaPresencial');
 
+const aulaPresenciais = [{
+    disciplina: 'calc 1'
+},{
+    disciplina: 'calc 2'
+}];
 
 beforeEach((done) => {
-    AulaPresencial.remove({}).then(() => done());
+    AulaPresencial.remove({}).then(() => {
+        return AulaPresencial.insertMany(aulaPresenciais);
+    }).then(() => done());
 });
 
 describe('POST /aulaPresenciais', () => {
@@ -25,7 +32,7 @@ describe('POST /aulaPresenciais', () => {
                     return done(err);
                 }
 
-                AulaPresencial.find().then((aulas) => {
+                AulaPresencial.find({disciplina}).then((aulas) => {
                     expect(aulas.length).toBe(1);
                     expect(aulas[0].disciplina).toEqual(disciplina);
                     done();
@@ -45,9 +52,22 @@ describe('POST /aulaPresenciais', () => {
                 }
 
                 AulaPresencial.find().then((aulas) => {
-                    expect(aulas.length).toBe(0);
+                    expect(aulas.length).toBe(2);
                     done();
                 }).catch((e) => done(e));
             });
+    });
+});
+
+describe('GET /aulaPresenciais', () => {
+    it('should not create aulaPresencial w/ disciplina field empty', (done) => {
+        
+        request(app)
+            .get('/aulaPresenciais')
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.aulas.length).toEqual(2);
+            })
+            .end(done);
     });
 });
