@@ -1,12 +1,15 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
 const {AulaPresencial} = require('./../models/aulaPresencial');
 
 const aulaPresenciais = [{
+    _id: new ObjectID(),
     disciplina: 'calc 1'
 },{
+    _id: new ObjectID(),
     disciplina: 'calc 2'
 }];
 
@@ -70,4 +73,32 @@ describe('GET /aulaPresenciais', () => {
             })
             .end(done);
     });
+});
+
+describe('GET /aulaPresenciais/:id', () => {
+    it('should return aulaPresencial doc', (done) => {
+        request(app)
+            .get(`/aulaPresenciais/${aulaPresenciais[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.aula.disciplina).toEqual(aulaPresenciais[0].disciplina);
+            })
+            .end(done);
+    });
+
+    it('should return 404 if aulaPresencial not found', (done) => {
+        var hexId = new ObjectID().toHexString();
+        request(app)
+        .get(`/aulaPresenciais/${hexId}`)
+        .expect(404)
+        .end(done);
+    });
+
+    it('should return 404 for non-object ids', (done) => {
+        request(app)
+        .get('/aulaPresenciais/123')
+        .expect(404)
+        .end(done);
+    });
+
 });
