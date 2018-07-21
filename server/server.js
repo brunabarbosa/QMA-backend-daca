@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose')
 var {AulaPresencial} = require('./models/aulaPresencial');
@@ -26,6 +27,24 @@ app.get('/aulaPresenciais', (req, res) => {
         res.send({aulas});
     }, (e) => {
         res.status(400).send(e);
+    });
+});
+
+// GET /aulaPresenciais/1234
+app.get('/aulaPresenciais/:id', (req, res) => {
+    var id = req.params.id;
+
+    if(!ObjectID.isValid(id)){
+        return res.status(404).send();
+    }
+
+    AulaPresencial.findById(id).then((aula) => {
+        if(!aula) {
+            return res.status(404).send();
+        }
+        res.send({aula});
+    }).catch((e) => {
+        res.status(400).send();
     });
 });
 
