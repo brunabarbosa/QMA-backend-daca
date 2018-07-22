@@ -11,7 +11,7 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post('/aulaPresenciais', (req, res) => {
+app.post('/aulasPresenciais', (req, res) => {
     var aulaPresencial = new AulaPresencial({
         disciplina: req.body.disciplina
     });
@@ -23,7 +23,7 @@ app.post('/aulaPresenciais', (req, res) => {
     });
 });
 
-app.get('/aulaPresenciais', (req, res) => {
+app.get('/aulasPresenciais', (req, res) => {
     AulaPresencial.find().then((aulas) => {
         res.send({aulas});
     }, (e) => {
@@ -32,7 +32,7 @@ app.get('/aulaPresenciais', (req, res) => {
 });
 
 // GET /aulaPresenciais/1234
-app.get('/aulaPresenciais/:id', (req, res) => {
+app.get('/aulasPresenciais/:id', (req, res) => {
     var id = req.params.id;
 
     if(!ObjectID.isValid(id)){
