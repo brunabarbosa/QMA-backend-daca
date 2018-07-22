@@ -13,3 +13,8 @@ npm i mocha --save-dev
 npm i nodemon --save-dev
 npm i supertest --save-dev
 
+
+create heroku app
+heroku create
+heroku addons:create mongolab:sandbox 
+heroku config
