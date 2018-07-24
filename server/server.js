@@ -31,7 +31,6 @@ app.get('/aulasPresenciais', (req, res) => {
     });
 });
 
-// GET /aulaPresenciais/1234
 app.get('/aulasPresenciais/:id', (req, res) => {
     var id = req.params.id;
 
@@ -40,6 +39,23 @@ app.get('/aulasPresenciais/:id', (req, res) => {
     }
 
     AulaPresencial.findById(id).then((aula) => {
+        if(!aula) {
+            return res.status(404).send();
+        }
+        res.send({aula});
+    }).catch((e) => {
+        res.status(400).send();
+    });
+});
+
+app.delete('/aulasPresenciais/:id', (req, res) => {
+    var id = req.params.id;
+
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    AulaPresencial.findByIdAndRemove(id).then((aula) => {
         if(!aula) {
             return res.status(404).send();
         }

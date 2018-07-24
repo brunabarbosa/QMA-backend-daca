@@ -8,7 +8,7 @@ const {AulaPresencial} = require('./../models/aulaPresencial');
 const aulasPresenciais = [{
     _id: new ObjectID(),
     disciplina: 'calc 1'
-},{
+}, {
     _id: new ObjectID(),
     disciplina: 'calc 2'
 }];
@@ -25,7 +25,9 @@ describe('POST /aulasPresenciais', () => {
 
         request(app)
             .post('/aulasPresenciais')
-            .send({disciplina})
+            .send({
+                disciplina
+            })
             .expect(200)
             .expect((res) => {
                 expect(res.body.disciplina).toEqual(disciplina);
@@ -35,7 +37,9 @@ describe('POST /aulasPresenciais', () => {
                     return done(err);
                 }
 
-                AulaPresencial.find({disciplina}).then((aulas) => {
+                AulaPresencial.find({
+                    disciplina
+                }).then((aulas) => {
                     expect(aulas.length).toBe(1);
                     expect(aulas[0].disciplina).toEqual(disciplina);
                     done();
@@ -44,7 +48,7 @@ describe('POST /aulasPresenciais', () => {
     });
 
     it('should not create aulaPresencial w/ disciplina field empty', (done) => {
-        
+
         request(app)
             .post('/aulasPresenciais')
             .send({})
@@ -64,7 +68,7 @@ describe('POST /aulasPresenciais', () => {
 
 describe('GET /aulasPresenciais', () => {
     it('should not create aulaPresencial w/ disciplina field empty', (done) => {
-        
+
         request(app)
             .get('/aulasPresenciais')
             .expect(200)
@@ -89,16 +93,55 @@ describe('GET /aulasPresenciais/:id', () => {
     it('should return 404 if aulaPresencial not found', (done) => {
         var hexId = new ObjectID().toHexString();
         request(app)
-        .get(`/aulasPresenciais/${hexId}`)
-        .expect(404)
-        .end(done);
+            .get(`/aulasPresenciais/${hexId}`)
+            .expect(404)
+            .end(done);
     });
 
     it('should return 404 for non-object ids', (done) => {
         request(app)
-        .get('/aulasPresenciais/123')
-        .expect(404)
-        .end(done);
+            .get('/aulasPresenciais/123')
+            .expect(404)
+            .end(done);
     });
 
+});
+
+describe('DELETE /aulasPresenciais/:id', () => {
+    it('should remove a aulaPresencial', (done) => {
+        var hexId = aulasPresenciais[1]._id.toHexString();
+
+        request(app)
+            .delete(`/aulasPresenciais/${hexId}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.aula._id).toBe(hexId);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+
+                AulaPresencial.findById(hexId).then((aula) => {
+                    expect(aula).toBeNull();
+                    done();
+                }).catch((e) => done(e));
+
+            });
+    });
+
+    it('should return 404 if aulaPresencial not found', (done) => {
+        var hexId = new ObjectID().toHexString();
+        request(app)
+            .delete(`/aulasPresenciais/${hexId}`)
+            .expect(404)
+            .end(done);
+    });
+
+    it('should return 404 if object id is invalid', (done) => {
+        request(app)
+            .delete('/aulasPresenciais/123')
+            .expect(404)
+            .end(done);
+    });
 });
