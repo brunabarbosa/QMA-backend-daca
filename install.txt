@@ -13,6 +13,9 @@ npm i mocha --save-dev
 npm i nodemon --save-dev
 npm i supertest --save-dev
 npm i lodash --save
+npm i validator --save 
+npm i crypto-js --save
+npm i jsonwebtoken --save
 
 create heroku app
 heroku create
