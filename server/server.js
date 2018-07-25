@@ -1,6 +1,7 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var {ObjectID} = require('mongodb');
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose')
 var {AulaPresencial} = require('./models/aulaPresencial');
@@ -63,6 +64,24 @@ app.delete('/aulasPresenciais/:id', (req, res) => {
     }).catch((e) => {
         res.status(400).send();
     });
+});
+
+app.patch('/aulasPresenciais/:id', (req, res) => {
+            var id = req.params.id;
+            var body = _.pick(req.body, ['disciplina', 'data', 'local']);
+
+            if (!ObjectID.isValid(id)) {
+                return res.status(404).send();
+            }
+
+            AulaPresencial.findByIdAndUpdate(id, {$set: body}, {new: true}).then((aula) => {
+                if (!aula) {
+                    return res.status(404).send();
+                }
+                res.send({aula});
+            }).catch((e) => {
+                res.status(400).send();
+            });
 });
 
 app.listen(port, () => {

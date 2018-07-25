@@ -12,7 +12,7 @@ npm i expect --save-dev
 npm i mocha --save-dev
 npm i nodemon --save-dev
 npm i supertest --save-dev
-
+npm i lodash --save
 
 create heroku app
 heroku create
