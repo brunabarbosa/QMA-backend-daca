@@ -145,3 +145,26 @@ describe('DELETE /aulasPresenciais/:id', () => {
             .end(done);
     });
 });
+
+describe('PATCH /aulasPresenciais/:id', () => {
+    it('should update a aulaPresencial', (done) => {
+        var hexId = aulasPresenciais[1]._id.toHexString();
+        var disciplina = "vetorial"
+
+        request(app)
+            .patch(`/aulasPresenciais/${hexId}`)
+            .send({disciplina})
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.aula._id).toBe(hexId);
+                expect(res.body.aula.disciplina).toBe(disciplina);
+            }).end(done);
+    });
+
+    it('should return 404 if object id is invalid', (done) => {
+        request(app)
+            .patch('/aulasPresenciais/123')
+            .expect(404)
+            .end(done);
+    });
+});
