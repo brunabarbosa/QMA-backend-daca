@@ -46,6 +46,7 @@ const populateUsers = (done) => {
 
 module.exports = {
     aulasPresenciais, 
+    users,
     populateAulasPresenciais,
     populateUsers
 };
