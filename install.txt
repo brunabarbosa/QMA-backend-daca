@@ -16,6 +16,7 @@ npm i lodash --save
 npm i validator --save 
 npm i crypto-js --save
 npm i jsonwebtoken --save
+npm i bcryptjs --save
 
 create heroku app
 heroku create
