@@ -4,20 +4,9 @@ const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
 const {AulaPresencial} = require('./../models/aulaPresencial');
+const {aulasPresenciais, populateAulasPresenciais} = require('./seed/seed');
 
-const aulasPresenciais = [{
-    _id: new ObjectID(),
-    disciplina: 'calc 1'
-}, {
-    _id: new ObjectID(),
-    disciplina: 'calc 2'
-}];
-
-beforeEach((done) => {
-    AulaPresencial.remove({}).then(() => {
-        return AulaPresencial.insertMany(aulasPresenciais);
-    }).then(() => done());
-});
+beforeEach(populateAulasPresenciais);
 
 describe('POST /aulasPresenciais', () => {
     it('should create a new AulaPresencial', (done) => {
