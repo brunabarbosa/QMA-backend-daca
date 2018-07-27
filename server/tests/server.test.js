@@ -4,8 +4,9 @@ const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
 const {AulaPresencial} = require('./../models/aulaPresencial');
-const {aulasPresenciais, populateAulasPresenciais} = require('./seed/seed');
+const {aulasPresenciais, populateAulasPresenciais, populateUsers} = require('./seed/seed');
 
+beforeEach(populateUsers);
 beforeEach(populateAulasPresenciais);
 
 describe('POST /aulasPresenciais', () => {
