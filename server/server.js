@@ -68,21 +68,21 @@ app.delete('/aulasPresenciais/:id', (req, res) => {
 });
 
 app.patch('/aulasPresenciais/:id', (req, res) => {
-            var id = req.params.id;
-            var body = _.pick(req.body, ['disciplina', 'data', 'local']);
+    var id = req.params.id;
+    var body = _.pick(req.body, ['disciplina', 'data', 'local']);
 
-            if (!ObjectID.isValid(id)) {
-                return res.status(404).send();
-            }
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
 
-            AulaPresencial.findByIdAndUpdate(id, {$set: body}, {new: true}).then((aula) => {
-                if (!aula) {
-                    return res.status(404).send();
-                }
-                res.send({aula});
-            }).catch((e) => {
-                res.status(400).send();
-            });
+    AulaPresencial.findByIdAndUpdate(id, { $set: body }, { new: true }).then((aula) => {
+        if (!aula) {
+            return res.status(404).send();
+        }
+        res.send({ aula });
+    }).catch((e) => {
+        res.status(400).send();
+    });
 });
 
 app.post('/users', (req, res) => {

@@ -4,6 +4,7 @@ const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
 const {AulaPresencial} = require('./../models/aulaPresencial');
+const {User} = require('./../models/user');
 const {aulasPresenciais, users, populateAulasPresenciais, populateUsers} = require('./seed/seed');
 
 beforeEach(populateUsers);
@@ -181,4 +182,46 @@ describe('GET /users/me', () => {
             })
             .end(done);
     });
+});
+
+
+describe('POST /users', () => {
+    it('should create a user', (done) => {
+        var email = 'example@example.com';
+        var password = '123mnb!';
+
+        request(app)
+            .post('/users')
+            .send({email, password})
+            .expect(200)
+            .expect((res) => {
+                expect(res.headers['x-auth']).toBeDefined();
+                expect(res.body._id).toBeDefined();
+                expect(res.body.email).toBe(email);
+            })
+            .end(done);
+    });
+
+    it('should return validation error if request invalid', (done) => {
+        request(app)
+            .post('/users')
+            .send({
+                email:'and', 
+                password: '123'
+            })
+            .expect(400)
+            .end(done);
+    });
+
+    it('should not create user if email in user', (done) => {
+        request(app)
+            .post('/users')
+            .send({
+                email: users[0].email,
+                password: 'password123'
+            })
+            .expect(400)
+            .end(done);
+    });
+
 });
