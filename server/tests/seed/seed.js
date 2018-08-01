@@ -23,10 +23,12 @@ const users = [{
 
 const aulasPresenciais = [{
     _id: new ObjectID(),
-    disciplina: 'calc 1'
+    disciplina: 'calc 1',
+    _creator: userOneId
 }, {
     _id: new ObjectID(),
-    disciplina: 'calc 2'
+    disciplina: 'calc 2',
+    _creator: userTwoId
 }];
 
 const populateAulasPresenciais = (done) => {

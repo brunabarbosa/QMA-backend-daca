@@ -14,6 +14,10 @@ var AulaPresencial = mongoose.model('AulaPresencial', {
     local: {
         type: String,
         default: null
+    },
+    _creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }
 });
 

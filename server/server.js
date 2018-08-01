@@ -13,9 +13,10 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post('/aulasPresenciais', (req, res) => {
+app.post('/aulasPresenciais', authenticate, (req, res) => {
     var aulaPresencial = new AulaPresencial({
-        disciplina: req.body.disciplina
+        disciplina: req.body.disciplina,
+        _creator: req.user._id
     });
 
     aulaPresencial.save().then((doc) => {
@@ -25,8 +26,10 @@ app.post('/aulasPresenciais', (req, res) => {
     });
 });
 
-app.get('/aulasPresenciais', (req, res) => {
-    AulaPresencial.find().then((aulas) => {
+app.get('/aulasPresenciais', authenticate, (req, res) => {
+    AulaPresencial.find({
+        _creator: req.user._id
+    }).then((aulas) => {
         res.send({aulas});
     }, (e) => {
         res.status(400).send(e);

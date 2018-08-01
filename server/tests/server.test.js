@@ -16,6 +16,7 @@ describe('POST /aulasPresenciais', () => {
 
         request(app)
             .post('/aulasPresenciais')
+            .set('x-auth', users[0].tokens[0].token)
             .send({
                 disciplina
             })
@@ -42,6 +43,7 @@ describe('POST /aulasPresenciais', () => {
 
         request(app)
             .post('/aulasPresenciais')
+            .set('x-auth', users[0].tokens[0].token)
             .send({})
             .expect(400)
             .end((err, res) => {
@@ -62,9 +64,10 @@ describe('GET /aulasPresenciais', () => {
 
         request(app)
             .get('/aulasPresenciais')
+            .set('x-auth', users[0].tokens[0].token)
             .expect(200)
             .expect((res) => {
-                expect(res.body.aulas.length).toEqual(2);
+                expect(res.body.aulas.length).toEqual(1);
             })
             .end(done);
     });
