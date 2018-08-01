@@ -18,7 +18,11 @@ const users = [{
 }, {
     _id: userTwoId,
     email: 'brunabarbosa@gmail.com',
-    password: 'userTwoPass'
+    password: 'userTwoPass',
+    tokens: [{
+        access: 'auth',
+        token: jwt.sign({_id: userTwoId, access: 'auth'}, 'abc123').toString()
+    }]
 }];
 
 const aulasPresenciais = [{

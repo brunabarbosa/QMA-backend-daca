@@ -36,14 +36,17 @@ app.get('/aulasPresenciais', authenticate, (req, res) => {
     });
 });
 
-app.get('/aulasPresenciais/:id', (req, res) => {
+app.get('/aulasPresenciais/:id', authenticate, (req, res) => {
     var id = req.params.id;
 
     if(!ObjectID.isValid(id)){
         return res.status(404).send();
     }
 
-    AulaPresencial.findById(id).then((aula) => {
+    AulaPresencial.findOne({
+        _id: id,
+        _creator: req.user._id
+    }).then((aula) => {
         if(!aula) {
             return res.status(404).send();
         }
@@ -53,14 +56,17 @@ app.get('/aulasPresenciais/:id', (req, res) => {
     });
 });
 
-app.delete('/aulasPresenciais/:id', (req, res) => {
+app.delete('/aulasPresenciais/:id', authenticate, (req, res) => {
     var id = req.params.id;
 
     if(!ObjectID.isValid(id)) {
         return res.status(404).send();
     }
 
-    AulaPresencial.findByIdAndRemove(id).then((aula) => {
+    AulaPresencial.findOneAndRemove({
+        _id: id,
+        _creator: req.user._id
+    }).then((aula) => {
         if(!aula) {
             return res.status(404).send();
         }
@@ -70,7 +76,7 @@ app.delete('/aulasPresenciais/:id', (req, res) => {
     });
 });
 
-app.patch('/aulasPresenciais/:id', (req, res) => {
+app.patch('/aulasPresenciais/:id', authenticate, (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['disciplina', 'data', 'local']);
 
@@ -78,7 +84,7 @@ app.patch('/aulasPresenciais/:id', (req, res) => {
         return res.status(404).send();
     }
 
-    AulaPresencial.findByIdAndUpdate(id, { $set: body }, { new: true }).then((aula) => {
+    AulaPresencial.findOneAndUpdate({_id: id, _creator: req.user._id }, { $set: body }, { new: true }).then((aula) => {
         if (!aula) {
             return res.status(404).send();
         }

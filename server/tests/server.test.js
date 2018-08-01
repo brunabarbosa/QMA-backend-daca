@@ -77,6 +77,7 @@ describe('GET /aulasPresenciais/:id', () => {
     it('should return aulaPresencial doc', (done) => {
         request(app)
             .get(`/aulasPresenciais/${aulasPresenciais[0]._id.toHexString()}`)
+            .set('x-auth', users[0].tokens[0].token)
             .expect(200)
             .expect((res) => {
                 expect(res.body.aula.disciplina).toEqual(aulasPresenciais[0].disciplina);
@@ -84,10 +85,19 @@ describe('GET /aulasPresenciais/:id', () => {
             .end(done);
     });
 
+    it('should not return aulaPresencial doc created by other user', (done) => {
+        request(app)
+            .get(`/aulasPresenciais/${aulasPresenciais[0]._id.toHexString()}`)
+            .set('x-auth', users[1].tokens[0].token)
+            .expect(404)
+            .end(done);
+    });
+
     it('should return 404 if aulaPresencial not found', (done) => {
         var hexId = new ObjectID().toHexString();
         request(app)
             .get(`/aulasPresenciais/${hexId}`)
+            .set('x-auth', users[0].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -95,6 +105,7 @@ describe('GET /aulasPresenciais/:id', () => {
     it('should return 404 for non-object ids', (done) => {
         request(app)
             .get('/aulasPresenciais/123')
+            .set('x-auth', users[0].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -107,17 +118,29 @@ describe('DELETE /aulasPresenciais/:id', () => {
 
         request(app)
             .delete(`/aulasPresenciais/${hexId}`)
+            .set('x-auth', users[1].tokens[0].token)
             .expect(200)
             .expect((res) => {
                 expect(res.body.aula._id).toBe(hexId);
             })
+            .end(done);
+
+    });
+
+    it('should not remove a aulaPresencial created by other user', (done) => {
+        var hexId = aulasPresenciais[0]._id.toHexString();
+
+        request(app)
+            .delete(`/aulasPresenciais/${hexId}`)
+            .set('x-auth', users[1].tokens[0].token)
+            .expect(404)
             .end((err, res) => {
                 if (err) {
                     return done(err);
                 }
 
                 AulaPresencial.findById(hexId).then((aula) => {
-                    expect(aula).toBeNull();
+                    expect(aula).toBeDefined();
                     done();
                 }).catch((e) => done(e));
 
@@ -128,6 +151,7 @@ describe('DELETE /aulasPresenciais/:id', () => {
         var hexId = new ObjectID().toHexString();
         request(app)
             .delete(`/aulasPresenciais/${hexId}`)
+            .set('x-auth', users[1].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -135,6 +159,7 @@ describe('DELETE /aulasPresenciais/:id', () => {
     it('should return 404 if object id is invalid', (done) => {
         request(app)
             .delete('/aulasPresenciais/123')
+            .set('x-auth', users[1].tokens[0].token)
             .expect(404)
             .end(done);
     });
@@ -142,11 +167,12 @@ describe('DELETE /aulasPresenciais/:id', () => {
 
 describe('PATCH /aulasPresenciais/:id', () => {
     it('should update a aulaPresencial', (done) => {
-        var hexId = aulasPresenciais[1]._id.toHexString();
+        var hexId = aulasPresenciais[0]._id.toHexString();
         var disciplina = "vetorial"
 
         request(app)
             .patch(`/aulasPresenciais/${hexId}`)
+            .set('x-auth', users[0].tokens[0].token)
             .send({disciplina})
             .expect(200)
             .expect((res) => {
@@ -155,9 +181,22 @@ describe('PATCH /aulasPresenciais/:id', () => {
             }).end(done);
     });
 
+    it('should not update a aulaPresencial created by other user', (done) => {
+        var hexId = aulasPresenciais[0]._id.toHexString();
+        var disciplina = "vetorial"
+
+        request(app)
+            .patch(`/aulasPresenciais/${hexId}`)
+            .set('x-auth', users[1].tokens[0].token)
+            .send({disciplina})
+            .expect(404)
+            .end(done);
+    });
+
     it('should return 404 if object id is invalid', (done) => {
         request(app)
             .patch('/aulasPresenciais/123')
+            .set('x-auth', users[1].tokens[0].token)
             .expect(404)
             .end(done);
     });
