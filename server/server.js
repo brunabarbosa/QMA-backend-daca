@@ -58,7 +58,7 @@ app.get('/aulasPresenciais/:id', authenticate, (req, res) => {
         }
         res.send({aula});
     }).catch((e) => {
-        res.status(400).send();
+        res.status(400).send(e);
     });
 });
 
@@ -78,7 +78,7 @@ app.delete('/aulasPresenciais/:id', authenticate, (req, res) => {
         }
         res.send({aula});
     }).catch((e) => {
-        res.status(400).send();
+        res.status(400).send(e);
     });
 });
 
@@ -96,7 +96,7 @@ app.patch('/aulasPresenciais/:id', authenticate, (req, res) => {
         }
         res.send({ aula });
     }).catch((e) => {
-        res.status(400).send();
+        res.status(400).send(e);
     });
 });
 
@@ -109,7 +109,7 @@ app.post('/users', (req, res) => {
     }).then((token) => {
         res.header('x-auth', token).send(user);
     }).catch((e) => {
-        res.status(400).send();
+        res.status(400).send(e);
     });
 });
 
@@ -125,7 +125,7 @@ app.post('/users/login', (req, res) => {
             res.header('x-auth', token).send(user);
         });
     }).catch((e) => {
-        res.status(400).send();
+        res.status(400).send(e);
     });
 });
 
