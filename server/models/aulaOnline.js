@@ -1,18 +1,14 @@
 var mongoose = require('mongoose');
 
-var AulaPresencial = mongoose.model('AulaPresencial', {
+var AulaOnline = mongoose.model('AulaOnline', {
     disciplina: {
         type: String,
         required: true,
         minlength: 1,
         trim: true
     },
-    data: {
+    date: {
         type: Date,
-        default: null
-    },
-    local: {
-        type: String,
         default: null
     },
     tutor: {
@@ -24,4 +20,4 @@ var AulaPresencial = mongoose.model('AulaPresencial', {
     }
 });
 
-module.exports = {AulaPresencial};
+module.exports = {AulaOnline};

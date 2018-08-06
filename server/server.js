@@ -5,6 +5,8 @@ const {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose')
 var {AulaPresencial} = require('./models/aulaPresencial');
+var {AulaOnline} = require('./models/aulaOnline');
+var {PedidoAjuda} = require('./models/pedidoAjuda');
 var {User} = require('./models/user');
 var {authenticate} = require('./middleware/authenticate');
 
@@ -19,9 +21,70 @@ app.use(bodyParser.json(), function(req, res, next) {
     next();
   });
 
+app.post('/pedidosAjuda', (req, res) => {
+    var pedidoAjuda = new PedidoAjuda({
+        disciplina: req.body.disciplina,
+        isOnline: req.body.isOnline,
+        date: req.body.date
+    });
+
+    pedidoAjuda.save().then((doc) => {
+        res.send(doc);
+    }, (e) => {
+        res.status(400).send(e);
+    });
+});
+
+app.get('/pedidosAjuda', (req, res) => {
+    PedidoAjuda.find({}).then((pedidos) => {
+        res.send({pedidos});
+    }, (e) => {
+        res.status(400).send(e);
+    });
+});
+
+app.delete('/pedidosAjuda/:id', (req, res) => {
+    var id = req.params.id;
+
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    PedidoAjuda.findOneAndRemove({
+        _id: id
+    }).then((pedido) => {
+        if(!pedido) {
+            return res.status(404).send();
+        }
+        res.send({pedido});
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
+});
+
+app.patch('/pedidosAjuda/:id', (req, res) => {
+    var id = req.params.id;
+    var body = _.pick(req.body, ['disciplina', 'date', 'isOnline']);
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    PedidoAjuda.findOneAndUpdate({_id: id}, { $set: body }, { new: true }).then((pedido) => {
+        if (!pedido) {
+            return res.status(404).send();
+        }
+        res.send({ pedido });
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
+});
+
 app.post('/aulasPresenciais', authenticate, (req, res) => {
     var aulaPresencial = new AulaPresencial({
         disciplina: req.body.disciplina,
+        local: req.body.local,
+        tutor: req.body.tutor,
         _creator: req.user._id
     });
 
@@ -101,7 +164,7 @@ app.patch('/aulasPresenciais/:id', authenticate, (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-    var body = _.pick(req.body, ['email', 'password']);
+    var body = _.pick(req.body, ['name', 'email', 'password']);
     var user = new User(body);
 
     user.save().then(() => {

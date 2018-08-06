@@ -5,6 +5,11 @@ const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 
 var UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        trim: true,
+        minlength: 1
+    },
     email: {
         type: String,
         required: true,
@@ -20,6 +25,14 @@ var UserSchema = new mongoose.Schema({
         type: String,
         require: true,
         minlength: 6
+    },
+    isTutor: {
+        type: Boolean,
+        default: false
+    },
+    conhecimentos: [],
+    avaliacao: {
+        type: Number
     },
     tokens: [{
         access: {
