@@ -21,6 +21,13 @@ app.use(bodyParser.json(), function(req, res, next) {
     next();
   });
 
+/**
+ * Salva um pedido de ajuda feitos pelo alunos
+ *
+ * @section pedidosAjuda
+ * @type post
+ * @url /pedidosAjuda
+ */
 app.post('/pedidosAjuda', (req, res) => {
     var pedidoAjuda = new PedidoAjuda({
         disciplina: req.body.disciplina,
@@ -35,6 +42,13 @@ app.post('/pedidosAjuda', (req, res) => {
     });
 });
 
+/**
+ * Retorna todos os pedidos de ajuda feitos pelos alunos
+ *
+ * @section pedidosAjuda
+ * @type get
+ * @url /pedidosAjuda
+ */
 app.get('/pedidosAjuda', (req, res) => {
     PedidoAjuda.find({}).then((pedidos) => {
         res.send({pedidos});
@@ -43,6 +57,13 @@ app.get('/pedidosAjuda', (req, res) => {
     });
 });
 
+/**
+ * Deleta um pedido de ajuda feito por um aluno
+ *
+ * @section pedidosAjuda
+ * @type delete
+ * @url /pedidosAjuda:id
+ */
 app.delete('/pedidosAjuda/:id', (req, res) => {
     var id = req.params.id;
 
@@ -62,6 +83,13 @@ app.delete('/pedidosAjuda/:id', (req, res) => {
     });
 });
 
+/**
+ * Atualiza um pedido de ajuda feito por um aluno
+ *
+ * @section pedidosAjuda
+ * @type put
+ * @url /pedidosAjuda:id
+ */
 app.patch('/pedidosAjuda/:id', (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['disciplina', 'date', 'isOnline']);
@@ -80,6 +108,14 @@ app.patch('/pedidosAjuda/:id', (req, res) => {
     });
 });
 
+/**
+ * Registra uma aula presencial com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasPresenciais
+ * @type post
+ * @url /aulasPresenciais
+ */
 app.post('/aulasPresenciais', authenticate, (req, res) => {
     var aulaPresencial = new AulaPresencial({
         disciplina: req.body.disciplina,
@@ -95,6 +131,14 @@ app.post('/aulasPresenciais', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Registra uma aula online com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasOnline
+ * @type post
+ * @url /aulasOnline
+ */
 app.post('/aulasOnline', authenticate, (req, res) => {
     var aulaOnline = new AulaOnline({
         disciplina: req.body.disciplina,
@@ -110,6 +154,14 @@ app.post('/aulasOnline', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Retorna todas as aulas presenciais marcadas, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasPresenciais
+ * @type get
+ * @url /aulasPresenciais
+ */
 app.get('/aulasPresenciais', authenticate, (req, res) => {
     AulaPresencial.find({
         _creator: req.user._id
@@ -120,6 +172,14 @@ app.get('/aulasPresenciais', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Retorna todas as aulas online marcadas, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasOnline
+ * @type get
+ * @url /aulasOnline
+ */
 app.get('/aulasOnline', authenticate, (req, res) => {
     AulaOnline.find({
         _creator: req.user._id
@@ -130,6 +190,14 @@ app.get('/aulasOnline', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Retorna uma aula presencial com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasPresenciais
+ * @type get
+ * @url /aulasPresenciais/:id
+ */
 app.get('/aulasPresenciais/:id', authenticate, (req, res) => {
     var id = req.params.id;
 
@@ -150,6 +218,14 @@ app.get('/aulasPresenciais/:id', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Retorna uma aula online com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasOnline
+ * @type get
+ * @url /aulasOnline/:id
+ */
 app.get('/aulasOnline/:id', authenticate, (req, res) => {
     var id = req.params.id;
 
@@ -170,6 +246,14 @@ app.get('/aulasOnline/:id', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Deleta uma aula presencial com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasPresenciais
+ * @type delete
+ * @url /aulasPresenciais/:id
+ */
 app.delete('/aulasPresenciais/:id', authenticate, (req, res) => {
     var id = req.params.id;
 
@@ -190,6 +274,14 @@ app.delete('/aulasPresenciais/:id', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Deleta uma aula online com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasOnline
+ * @type delete
+ * @url /aulasOnline/:id
+ */
 app.delete('/aulasOnline/:id', authenticate, (req, res) => {
     var id = req.params.id;
 
@@ -210,6 +302,14 @@ app.delete('/aulasOnline/:id', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Atualiza uma aula presencial com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasPresenciais
+ * @type put
+ * @url /aulasPresenciais/:id
+ */
 app.patch('/aulasPresenciais/:id', authenticate, (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['disciplina', 'data', 'local']);
@@ -228,6 +328,14 @@ app.patch('/aulasPresenciais/:id', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Atualiza uma aula online com um tutor, o aluno precisa estar
+ * autenticado
+ *
+ * @section aulasOnline
+ * @type put
+ * @url /aulasOnline/:id
+ */
 app.patch('/aulasOnline/:id', authenticate, (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['disciplina', 'data']);
@@ -246,6 +354,13 @@ app.patch('/aulasOnline/:id', authenticate, (req, res) => {
     });
 });
 
+/**
+ * Registra um novo usuario
+ *
+ * @section users
+ * @type post
+ * @url /users
+ */
 app.post('/users', (req, res) => {
     var body = _.pick(req.body, ['name', 'email', 'password']);
     var user = new User(body);
@@ -259,10 +374,25 @@ app.post('/users', (req, res) => {
     });
 });
 
+/**
+ * Retorna um usuario. 
+ *
+ * @section users
+ * @type get
+ * @url /users/me
+ */
 app.get('/users/me', authenticate, (req, res) => {
     res.send(req.user);
 });
 
+
+/**
+ * Login de um usuario
+ *
+ * @section users
+ * @type post
+ * @url /users/login
+ */
 app.post('/users/login', (req, res) => {
     var body = _.pick(req.body, ['email', 'password']);
 
@@ -275,6 +405,14 @@ app.post('/users/login', (req, res) => {
     });
 });
 
+/**
+ * Logout de um usuario. Necessario setar o header com o atributo
+ * 'x-auth' com um token valido
+ *
+ * @section users
+ * @type post
+ * @url /users/me/token
+ */
 app.delete('/users/me/token', authenticate, (req, res) => {
     req.user.removeToken(req.token).then(() => {
         res.status(200).send();
