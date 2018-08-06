@@ -95,8 +95,33 @@ app.post('/aulasPresenciais', authenticate, (req, res) => {
     });
 });
 
+app.post('/aulasOnline', authenticate, (req, res) => {
+    var aulaOnline = new AulaOnline({
+        disciplina: req.body.disciplina,
+        local: req.body.local,
+        tutor: req.body.tutor,
+        _creator: req.user._id
+    });
+
+    aulaOnline.save().then((doc) => {
+        res.send(doc);
+    }, (e) => {
+        res.status(400).send(e);
+    });
+});
+
 app.get('/aulasPresenciais', authenticate, (req, res) => {
     AulaPresencial.find({
+        _creator: req.user._id
+    }).then((aulas) => {
+        res.send({aulas});
+    }, (e) => {
+        res.status(400).send(e);
+    });
+});
+
+app.get('/aulasOnline', authenticate, (req, res) => {
+    AulaOnline.find({
         _creator: req.user._id
     }).then((aulas) => {
         res.send({aulas});
@@ -113,6 +138,26 @@ app.get('/aulasPresenciais/:id', authenticate, (req, res) => {
     }
 
     AulaPresencial.findOne({
+        _id: id,
+        _creator: req.user._id
+    }).then((aula) => {
+        if(!aula) {
+            return res.status(404).send();
+        }
+        res.send({aula});
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
+});
+
+app.get('/aulasOnline/:id', authenticate, (req, res) => {
+    var id = req.params.id;
+
+    if(!ObjectID.isValid(id)){
+        return res.status(404).send();
+    }
+
+    AulaOnline.findOne({
         _id: id,
         _creator: req.user._id
     }).then((aula) => {
@@ -145,6 +190,26 @@ app.delete('/aulasPresenciais/:id', authenticate, (req, res) => {
     });
 });
 
+app.delete('/aulasOnline/:id', authenticate, (req, res) => {
+    var id = req.params.id;
+
+    if(!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    AulaOnline.findOneAndRemove({
+        _id: id,
+        _creator: req.user._id
+    }).then((aula) => {
+        if(!aula) {
+            return res.status(404).send();
+        }
+        res.send({aula});
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
+});
+
 app.patch('/aulasPresenciais/:id', authenticate, (req, res) => {
     var id = req.params.id;
     var body = _.pick(req.body, ['disciplina', 'data', 'local']);
@@ -154,6 +219,24 @@ app.patch('/aulasPresenciais/:id', authenticate, (req, res) => {
     }
 
     AulaPresencial.findOneAndUpdate({_id: id, _creator: req.user._id }, { $set: body }, { new: true }).then((aula) => {
+        if (!aula) {
+            return res.status(404).send();
+        }
+        res.send({ aula });
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
+});
+
+app.patch('/aulasOnline/:id', authenticate, (req, res) => {
+    var id = req.params.id;
+    var body = _.pick(req.body, ['disciplina', 'data']);
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    AulaOnline.findOneAndUpdate({_id: id, _creator: req.user._id }, { $set: body }, { new: true }).then((aula) => {
         if (!aula) {
             return res.status(404).send();
         }
