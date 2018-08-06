@@ -4,11 +4,48 @@ const {ObjectID} = require('mongodb');
 
 const {app} = require('./../server');
 const {AulaPresencial} = require('./../models/aulaPresencial');
+const {AulaOnline} = require('./../models/aulaOnline');
+const {PedidoAjuda} = require('./../models/pedidoAjuda');
 const {User} = require('./../models/user');
 const {aulasPresenciais, users, populateAulasPresenciais, populateUsers} = require('./seed/seed');
 
 beforeEach(populateUsers);
 beforeEach(populateAulasPresenciais);
+
+describe('POST /pedidosAjuda', () => {
+    it('should create a new PedidosAjuda', (done) => {
+        var disciplina = 'Calculo 1';
+        var isOnline = false;
+
+        request(app)
+            .post('/pedidosAjuda')
+            .send({
+                disciplina,
+                isOnline
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.disciplina).toEqual(disciplina);
+            })
+            .end(done);
+    });
+
+});
+
+describe('GET /aulasPresenciais', () => {
+    it('should not create aulaPresencial w/ disciplina field empty', (done) => {
+
+        request(app)
+            .get('/aulasPresenciais')
+            .set('x-auth', users[0].tokens[0].token)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.aulas.length).toEqual(1);
+            })
+            .end(done);
+    });
+});
+
 
 describe('POST /aulasPresenciais', () => {
     it('should create a new AulaPresencial', (done) => {
